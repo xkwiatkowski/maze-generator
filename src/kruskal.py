@@ -12,9 +12,6 @@ def kruskal(grid: Grid) -> list[tuple]:
 
     for edge in edges:
         accepted = uf.union(edge.cell_a, edge.cell_b)
-
-        if accepted:
-            grid.add_passage(edge)
         
         steps.append((edge, accepted))
 
