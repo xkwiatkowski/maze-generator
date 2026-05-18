@@ -10,21 +10,33 @@ from solver import bfs
 from visualizer import Visualizer
 
 def main():
-    rows, cols = 20, 20
-    cell_size = 30
-    delay_ms = 0
+    print("\nChoose maze size:")
+    print("  1 - Small (10x10)")
+    print("  2 - Medium (20x20)")
+    print("  3 - Large (30x30)")
+    size_choice = input("Enter your choice (1, 2, or 3): ").strip()
 
-    print("Choose a maze generation algorithm:")
-    print("  1 - Randomized Kruskal's Algorithm")
-    print("  2 - Randomized Prim's Algorithm")
-    choice = input("Enter your choice (1 or 2): ").strip()
+    if size_choice == '1':
+        rows, cols, cell_size = 10, 10, 50
+        delay_ms = 30
+    elif size_choice == '3':
+        rows, cols, cell_size = 30, 30, 22
+        delay_ms = 5
+    else:
+        rows, cols, cell_size = 20, 20, 30
+        delay_ms = 15
 
     grid = Grid(rows, cols)
 
-    if choice == '1':
+    print("\nChoose a maze generation algorithm:")
+    print("  1 - Randomized Kruskal's Algorithm")
+    print("  2 - Randomized Prim's Algorithm")
+    algorithm_choice = input("Enter your choice (1 or 2): ").strip()
+
+    if algorithm_choice == '1':
         steps = kruskal(grid)
         algorithm_name = "Kruskal's Algorithm"
-    elif choice == '2':
+    elif algorithm_choice == '2':
         steps = prim(grid)
         algorithm_name = "Prim's Algorithm"
     else:
