@@ -35,17 +35,18 @@ def main():
     pygame_title = f"Maze Generator - {algorithm_name}"
     pygame.display.set_caption(pygame_title)
 
-    vis.animate(steps, delay_ms=delay_ms)
+    should_solve = vis.animate(steps, delay_ms=delay_ms)
 
-    start = Cell(0, 0)
-    end = Cell(rows - 1, cols - 1)
-    path = bfs(grid, start, end)
+    if should_solve:
+        start = Cell(0, 0)
+        end = Cell(rows - 1, cols - 1)
+        path = bfs(grid, start, end)
 
-    if path:
-        pygame.display.set_caption(f"Maze Solver - BFS ({len(path)} steps)")
-        vis.draw_solution(path)
-    else:
-        print("No path found.")
+        if path:
+            pygame.display.set_caption(f"Maze Solver - BFS ({len(path)} steps)")
+            vis.draw_solution(path)
+        else:
+            print("No path found.")
 
 if __name__ == "__main__":
     main()

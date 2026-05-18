@@ -55,9 +55,12 @@ class Visualizer:
         pygame.display.flip()
 
     def animate(self, steps: list, delay_ms: int = 30) -> None:
+        """Animates the maze generation process."""
         step_index = 0
         running = True
         generating = True
+        solve = False
+
 
         while running:
             for event in pygame.event.get():
@@ -65,7 +68,7 @@ class Visualizer:
                     running = False
 
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
+                    if event.key == pygame.K_SPACE and step_index < len(steps):
                         generating = not generating
 
             if generating and step_index < len(steps):
@@ -79,40 +82,72 @@ class Visualizer:
                 step_index += 1
                 pygame.time.wait(delay_ms)
             elif step_index >= len(steps):
-                break;
+                self.draw()
+                self._draw_text("S = solve | Q = quit")
+                pygame.display.flip()
+
+                waiting = True
+                while waiting:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            waiting = False
+                        if event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_s:
+                                solve = True
+                                waiting = False
+                            elif event.key == pygame.K_q:
+                                waiting = False
+
+                break
             else: 
                 self.draw()
                 self.clock.tick(30)
 
-        # pygame.quit()
+        return solve
 
     def draw_solution(self, path: list) -> None:
         """Draws the path on the screen."""
-        self.draw()
+        for i, cell in enumerate(path):
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    return
 
-        for cell in path:
-            x = cell.col * self.cell_size + 2
-            y = cell.row * self.cell_size + 2
-            size = self.cell_size - 2
+            self.draw()
 
-            pygame.draw.rect(self.screen, BLUE, (x, y, size, size))
+            for visited_cell in path[:i + 1]:
+                x = visited_cell.col * self.cell_size + 2
+                y = visited_cell.row * self.cell_size + 2
+                size = self.cell_size - 2
 
-        start = path[0]
-        end = path[-1]
+                pygame.draw.rect(self.screen, BLUE, (x, y, size, size))
 
-        for cell, color in ((start, GREEN), (end, RED)):
-            x = cell.col * self.cell_size + 2
-            y = cell.row * self.cell_size + 2
-            size = self.cell_size - 2
+            for cell, color in ((path[0], GREEN), (path[-1], RED)):
+                x = cell.col * self.cell_size + 2
+                y = cell.row * self.cell_size + 2
+                size = self.cell_size - 2
 
-            pygame.draw.rect(self.screen, color, (x, y, size, size))
+                pygame.draw.rect(self.screen, color, (x, y, size, size))
 
-        pygame.display.flip()
+            pygame.display.flip()
+            pygame.time.wait(30)
 
         waiting = True
         while waiting:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     waiting = False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_q:
+                        waiting = False
 
             self.clock.tick(30)
+
+    def _draw_text(self, text: str) -> None:
+        font = pygame.font.SysFont(None, 24)
+        surface = font.render(text, True, BLACK, WHITE)
+        
+        rect = surface.get_rect()
+        rect.centerx = self.width // 2
+        rect.bottom = self.height - 6
+        self.screen.blit(surface, rect)
+        
