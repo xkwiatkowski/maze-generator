@@ -78,8 +78,41 @@ class Visualizer:
 
                 step_index += 1
                 pygame.time.wait(delay_ms)
+            elif step_index >= len(steps):
+                break;
             else: 
                 self.draw()
                 self.clock.tick(30)
 
-        pygame.quit()
+        # pygame.quit()
+
+    def draw_solution(self, path: list) -> None:
+        """Draws the path on the screen."""
+        self.draw()
+
+        for cell in path:
+            x = cell.col * self.cell_size + 2
+            y = cell.row * self.cell_size + 2
+            size = self.cell_size - 2
+
+            pygame.draw.rect(self.screen, BLUE, (x, y, size, size))
+
+        start = path[0]
+        end = path[-1]
+
+        for cell, color in ((start, GREEN), (end, RED)):
+            x = cell.col * self.cell_size + 2
+            y = cell.row * self.cell_size + 2
+            size = self.cell_size - 2
+
+            pygame.draw.rect(self.screen, color, (x, y, size, size))
+
+        pygame.display.flip()
+
+        waiting = True
+        while waiting:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    waiting = False
+
+            self.clock.tick(30)

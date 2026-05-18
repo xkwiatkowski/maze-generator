@@ -2,15 +2,17 @@ import sys
 import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
-from grid import Grid
+import pygame
+from grid import Grid, Cell
 from kruskal import kruskal
 from prim import prim
+from solver import bfs
 from visualizer import Visualizer
 
 def main():
     rows, cols = 20, 20
     cell_size = 30
-    delay_ms = 30
+    delay_ms = 0
 
     print("Choose a maze generation algorithm:")
     print("  1 - Randomized Kruskal's Algorithm")
@@ -31,11 +33,19 @@ def main():
 
     vis = Visualizer(grid, cell_size=cell_size)
     pygame_title = f"Maze Generator - {algorithm_name}"
-
-    import pygame
     pygame.display.set_caption(pygame_title)
 
     vis.animate(steps, delay_ms=delay_ms)
+
+    start = Cell(0, 0)
+    end = Cell(rows - 1, cols - 1)
+    path = bfs(grid, start, end)
+
+    if path:
+        pygame.display.set_caption(f"Maze Solver - BFS ({len(path)} steps)")
+        vis.draw_solution(path)
+    else:
+        print("No path found.")
 
 if __name__ == "__main__":
     main()
