@@ -2,6 +2,7 @@ import sys
 import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
+import time
 import pygame
 from grid import Grid, Cell
 from kruskal import kruskal
@@ -33,6 +34,8 @@ def main():
     print("  2 - Randomized Prim's Algorithm")
     algorithm_choice = input("Enter your choice (1 or 2): ").strip()
 
+    start_time = time.time()
+
     if algorithm_choice == '1':
         steps = kruskal(grid)
         algorithm_name = "Kruskal's Algorithm"
@@ -42,6 +45,17 @@ def main():
     else:
         print("Invalid choice. Please run the program again and select either 1 or 2.")
         return
+    
+    elapsed = time.time() - start_time
+    accepted = sum(1 for _, a in steps if a)
+    rejected = sum(1 for _, a in steps if not a)
+
+    print(f"\n--- Generation Stats ---")
+    print(f"Algorithm:          {algorithm_name}")
+    print(f"Maze Size:          {rows}x{cols}")
+    print(f"Time:               {elapsed*1000:.2f} ms")
+    print(f"Passages created:   {accepted}")
+    print(f"Edges rejected:     {rejected}")
 
     vis = Visualizer(grid, cell_size=cell_size)
     pygame_title = f"Maze Generator - {algorithm_name}"
@@ -55,6 +69,8 @@ def main():
         path = bfs(grid, start, end)
 
         if path:
+            print(f"\nPath found in {len(path)} steps.")
+
             pygame.display.set_caption(f"Maze Solver - BFS ({len(path)} steps)")
             vis.draw_solution(path)
         else:
