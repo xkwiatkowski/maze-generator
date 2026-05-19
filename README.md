@@ -1,25 +1,31 @@
-# Generowanie labiryntu algorytmami grafowymi
+# Maze Generator
 
-## Tematyka
-Projekt polega na implementacji generatora labiryntów z wykorzystaniem algorytmów grafowych. Labirynt jest reprezentowany jako graf siatki (komórki = wierzchołki, ściany = krawędzie), a generowanie polega na budowaniu losowego drzewa rozpinającego. Projekt obejmuje wizualizację działania algorytmów oraz porównanie własności wygenerowanych labiryntów.
+## Description
+This project implements a maze generator using graph algorithms. The maze is represented as a grid graph (cells = vertices, walls = edges), and generation works by building a random spanning tree. The project includes step-by-step visualization of the algorithms and a BFS-based maze solver.
 
-## Algorytmy
-- Randomized Kruskal's Algorithm (z wykorzystaniem struktury Union-Find/DSU)
-- Randomized Prim's Algorithm
+## Algorithms
+- **Randomized Kruskal's Algorithm** — randomly removes walls using a Union-Find/DSU structure to avoid cycles
+- **Randomized Prim's Algorithm** — grows the maze from a single starting cell by randomly expanding the frontier
+- **BFS Solver** — finds the shortest path from the top-left to the bottom-right corner
 
-## Materiały
+## References
 - https://en.wikipedia.org/wiki/Maze_generation_algorithm
 - https://en.wikipedia.org/wiki/Kruskal%27s_algorithm
 
-## Technologie
+## Technologies
 - Python 3
-- Własna implementacja algorytmów i struktury Union-Find
-- Wizualizacja krok po kroku w Pygame
+- Custom implementation of graph algorithms and Union-Find structure
+- Step-by-step visualization using Pygame
 
-## Uruchomienie
+## Setup
 ```bash
-python3 -m venv venv
+python -m venv venv
 source venv/bin/activate
-pip install pygame
-python3 main.py
+pip install -r requirements.txt
+python main.py
 ```
+
+## Controls
+- **SPACE** — pause/resume generation
+- **S** — solve the maze after generation
+- **Q** — quit
